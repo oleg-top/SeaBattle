@@ -5,16 +5,15 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "users")
-public class User {
+@Table(name = "prizes")
+public class Prize {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String username;
+    @ManyToOne
+    private User user;
 
-    private String password;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Role role;
+    @ManyToOne
+    private Ship ship;
 }
