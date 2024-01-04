@@ -23,7 +23,7 @@ public class RegistrationController {
     @PostMapping("/registration")
     public ResponseEntity<?> registration(@RequestBody RegistrationRequest registrationRequest) {
         if (userService.findByUsername(registrationRequest.getUsername()).isPresent())
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),"Пользователь с таким именем уже существует"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),"Пользователь с таким именем уже существует"), HttpStatus.BAD_REQUEST);
         User user = new User();
         user.setUsername(registrationRequest.getUsername());
         user.setPassword(registrationRequest.getPassword());
