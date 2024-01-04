@@ -18,7 +18,7 @@ public class Ship {
     @ManyToOne
     private Field field;
 
-    private Integer pos_x;
+    private Integer x;
 
-    private Integer pos_y;
+    private Integer y;
 }
