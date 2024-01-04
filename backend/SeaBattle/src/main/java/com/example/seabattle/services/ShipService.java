@@ -19,7 +19,7 @@ public class ShipService {
         return shipRepository.findByField(field);
     }
 
-    public Optional<Ship> findByCoordinatesAndField(Integer x, Integer y, Field field) {
+    public Optional<Ship> findByCoordinatesOnField(Integer x, Integer y, Field field) {
         return shipRepository.findByXAndYAndField(x, y, field);
     }
 }
