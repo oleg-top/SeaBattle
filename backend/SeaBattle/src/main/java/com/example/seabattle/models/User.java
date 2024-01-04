@@ -9,12 +9,13 @@ import lombok.Data;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
+    @Column(unique = true)
     private String username;
 
-    @Column(name = "password")
     private String password;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Role role;
 }
