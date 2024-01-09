@@ -31,6 +31,11 @@ public class ShotService {
         shotRepository.deleteShotByUserAndField(user, field);
     }
 
+    public void updateAmount(Shot shot, Integer amount) {
+        shot.setAmount(amount);
+        shotRepository.save(shot);
+    }
+
     public boolean correctAmount(Shot shot) {
         return shot.getAmount() != 0;
     }

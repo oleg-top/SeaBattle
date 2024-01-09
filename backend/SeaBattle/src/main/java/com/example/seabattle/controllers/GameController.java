@@ -1,14 +1,10 @@
 package com.example.seabattle.controllers;
 
 import com.example.seabattle.dtos.TakeAShotRequest;
+import com.example.seabattle.dtos.TakeAShotResponse;
 import com.example.seabattle.exceptions.AppError;
-import com.example.seabattle.models.Field;
-import com.example.seabattle.models.Shot;
-import com.example.seabattle.models.User;
-import com.example.seabattle.services.FieldService;
-import com.example.seabattle.services.ShipService;
-import com.example.seabattle.services.ShotService;
-import com.example.seabattle.services.UserService;
+import com.example.seabattle.models.*;
+import com.example.seabattle.services.*;
 import com.example.seabattle.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +26,7 @@ public class GameController {
     private final FieldService fieldService;
     private final ShotService shotService;
     private final ShipService shipService;
+    private final PrizeService prizeService;
 
     private final JwtTokenUtils jwtTokenUtils;
 
@@ -52,6 +49,21 @@ public class GameController {
         Optional<Shot> cur_shot = shotService.findByUserAndField(user, field);
         if (cur_shot.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No invitation with this id"), HttpStatus.BAD_REQUEST);
-        
+        Shot shot = cur_shot.get();
+        if (!shotService.correctAmount(shot))
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "The amount of shots is 0"), HttpStatus.BAD_REQUEST);
+        shotService.updateAmount(shot, shot.getAmount() - 1);
+        Optional<Ship> cur_ship = shipService.findByCoordinatesOnField(
+                takeAShotRequest.getX(),
+                takeAShotRequest.getY(),
+                field);
+        if (cur_ship.isEmpty())
+            return ResponseEntity.ok(new TakeAShotResponse("MISS"));
+        Ship ship = cur_ship.get();
+        Prize prize = new Prize();
+        prize.setUser(user);
+        prize.setShip(ship);
+        prizeService.createNewPrize(prize);
+        return ResponseEntity.ok(new TakeAShotResponse("HIT"));
     }
 }
