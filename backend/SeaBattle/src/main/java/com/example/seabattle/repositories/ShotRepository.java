@@ -13,5 +13,6 @@ import java.util.Optional;
 public interface ShotRepository extends CrudRepository<Shot, Long> {
     List<Shot> findByUser(User user);
     List<Shot> findByField(Field field);
+    Optional<Shot> findByUserAndField(User user, Field field);
     void deleteShotByUserAndField(User user, Field field);
 }

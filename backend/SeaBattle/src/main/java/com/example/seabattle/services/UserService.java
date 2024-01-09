@@ -26,6 +26,9 @@ public class UserService implements UserDetailsService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
 
     public void createNewUser(User user) {
         user.setRole(roleService.findByName("USER").get());

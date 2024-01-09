@@ -13,6 +13,8 @@ public class Ship {
 
     private String image;
 
+    private String name;
+
     private String description;
 
     @ManyToOne

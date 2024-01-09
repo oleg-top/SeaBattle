@@ -31,7 +31,7 @@ public class AuthorizationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authorizationRequest.getUsername(), authorizationRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            log.error(String.format("User with username '%s' wasn't authenticated - Bad credentials", authorizationRequest.getUsername()));
+            log.debug(String.format("User with username '%s' wasn't authenticated - Bad credentials", authorizationRequest.getUsername()));
             return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(),"Неправильный логин или пароль"), HttpStatus.UNAUTHORIZED);
         }
         User user = userService.findByUsername(authorizationRequest.getUsername()).get();

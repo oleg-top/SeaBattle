@@ -1,9 +1,12 @@
 package com.example.seabattle.utils;
 
 import com.example.seabattle.models.User;
+import com.example.seabattle.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +26,10 @@ public class JwtTokenUtils {
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         String role = user.getRole().getName();
+        Long id = user.getId();
 
         claims.put("role", role);
+        claims.put("id", id);
 
         Date issuedDate = new Date();
         Date expiredDate = new Date(issuedDate.getTime() + jwtLifetime.toMillis());
@@ -36,6 +41,10 @@ public class JwtTokenUtils {
                 .setExpiration(expiredDate)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+    }
+
+    public Long getId(String token) {
+        return getAllClaimsFromToken(token).get("id", Long.class);
     }
 
     public String getUsername(String token) {

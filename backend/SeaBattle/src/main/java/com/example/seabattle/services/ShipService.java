@@ -19,7 +19,15 @@ public class ShipService {
         return shipRepository.findByField(field);
     }
 
+    public Optional<Ship> findById(Long id) {
+        return shipRepository.findById(id);
+    }
+
     public Optional<Ship> findByCoordinatesOnField(Integer x, Integer y, Field field) {
         return shipRepository.findByXAndYAndField(x, y, field);
+    }
+
+    public void createNewShip(Ship ship) {
+        shipRepository.save(ship);
     }
 }

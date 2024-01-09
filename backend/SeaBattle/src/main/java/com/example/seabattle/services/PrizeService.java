@@ -5,6 +5,7 @@ import com.example.seabattle.repositories.PrizeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,5 +20,9 @@ public class PrizeService {
 
     public Optional<Prize> findById(Long id) {
         return prizeRepository.findById(id);
+    }
+
+    public List<Prize> allUserPrizes(String username) {
+        return prizeRepository.findByUser_Username(username);
     }
 }
