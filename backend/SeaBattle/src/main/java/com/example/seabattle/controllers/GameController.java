@@ -34,7 +34,7 @@ public class GameController {
     public ResponseEntity<?> takeAShot(
             @RequestHeader("Authorization") String authorization,
             @RequestBody TakeAShotRequest takeAShotRequest) {
-        if (!authorization.startsWith("Bearer "))
+        if (!jwtTokenUtils.validateToken(authorization))
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Wrong authorization token"), HttpStatus.BAD_REQUEST);
         String token = authorization.substring(7);
         Long userId = jwtTokenUtils.getId(token);

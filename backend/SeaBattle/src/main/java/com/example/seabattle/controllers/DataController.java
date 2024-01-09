@@ -11,7 +11,6 @@ import com.example.seabattle.services.*;
 import com.example.seabattle.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +36,7 @@ public class DataController {
 
     @GetMapping("/data/get_current_user_data")
     public ResponseEntity<?> getUserData(@RequestHeader("Authorization") String authorization) {
-        if (!authorization.startsWith("Bearer "))
+        if (!jwtTokenUtils.validateToken(authorization))
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Wrong authorization token"), HttpStatus.BAD_REQUEST);
         String token = authorization.substring(7);
         String username = jwtTokenUtils.getUsername(token);
