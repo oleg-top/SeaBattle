@@ -32,7 +32,7 @@ public class RegistrationController {
         User user = new User();
         user.setUsername(registrationRequest.getUsername());
         user.setPassword(registrationRequest.getPassword());
-        userService.createNewUser(user);
+        userService.createNewUser(user, registrationRequest.getIsAdmin());
         log.info(String.format("User '%s' has been created successfully", registrationRequest.getUsername()));
 
         String token = jwtTokenUtils.generateToken(user);

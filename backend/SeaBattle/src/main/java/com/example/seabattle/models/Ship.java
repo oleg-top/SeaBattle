@@ -23,4 +23,6 @@ public class Ship {
     private Integer x;
 
     private Integer y;
+
+    private Boolean active;
 }

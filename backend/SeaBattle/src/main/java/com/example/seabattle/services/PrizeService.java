@@ -1,6 +1,7 @@
 package com.example.seabattle.services;
 
 import com.example.seabattle.models.Prize;
+import com.example.seabattle.models.Ship;
 import com.example.seabattle.repositories.PrizeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,10 @@ public class PrizeService {
 
     public void createNewPrize(Prize prize) {
         prizeRepository.save(prize);
+    }
+
+    public void deletePrizeByShip(Ship ship) {
+        prizeRepository.deleteByShip(ship);
     }
 
     public Optional<Prize> findById(Long id) {

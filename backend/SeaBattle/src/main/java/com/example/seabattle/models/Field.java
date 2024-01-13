@@ -12,4 +12,6 @@ public class Field {
     private Long id;
 
     private Integer size;
+
+    private String description;
 }

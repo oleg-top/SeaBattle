@@ -1,6 +1,7 @@
 package com.example.seabattle.dtos;
 
 import com.example.seabattle.models.Prize;
+import com.example.seabattle.models.Shot;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,4 +14,5 @@ public class GetUserDataResponse {
     private String username;
     private String role;
     private List<Prize> prizes;
+    private List<Shot> shots;
 }

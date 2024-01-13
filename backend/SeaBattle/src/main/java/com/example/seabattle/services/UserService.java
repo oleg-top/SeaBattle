@@ -30,8 +30,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id);
     }
 
-    public void createNewUser(User user) {
-        user.setRole(roleService.findByName("USER").get());
+    public void createNewUser(User user, Boolean isAdmin) {
+        if (!isAdmin)
+            user.setRole(roleService.findByName("USER").get());
+        else
+            user.setRole(roleService.findByName("ADMIN").get());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }

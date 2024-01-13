@@ -1,12 +1,17 @@
 package com.example.seabattle.services;
 
+import com.example.seabattle.dtos.InviteUserResponse;
+import com.example.seabattle.exceptions.AppError;
 import com.example.seabattle.models.Field;
 import com.example.seabattle.models.Shot;
 import com.example.seabattle.models.User;
 import com.example.seabattle.repositories.ShotRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,12 +24,25 @@ public class ShotService {
         return shotRepository.findById(id);
     }
 
+    public List<Shot> findByUser(User user) {
+        return shotRepository.findByUser(user);
+    }
+
     public Optional<Shot> findByUserAndField(User user, Field field) {
         return shotRepository.findByUserAndField(user, field);
     }
 
-    public void createNewShot(Shot shot) {
+    public boolean createNewShot(Shot shot) {
+        User user = shot.getUser();
+        Field field = shot.getField();
+        if (findByUserAndField(user, field).isPresent())
+            return false;
         shotRepository.save(shot);
+        return true;
+    }
+
+    public void delete(Shot shot) {
+        shotRepository.delete(shot);
     }
 
     public void deleteShotByUserAndField(User user, Field field) {

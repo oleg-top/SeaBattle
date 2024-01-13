@@ -3,10 +3,7 @@ package com.example.seabattle.controllers;
 import com.example.seabattle.dtos.GetFieldDataByIdResponse;
 import com.example.seabattle.dtos.GetUserDataResponse;
 import com.example.seabattle.exceptions.AppError;
-import com.example.seabattle.models.Field;
-import com.example.seabattle.models.Prize;
-import com.example.seabattle.models.Ship;
-import com.example.seabattle.models.Shot;
+import com.example.seabattle.models.*;
 import com.example.seabattle.services.*;
 import com.example.seabattle.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +39,10 @@ public class DataController {
         String username = jwtTokenUtils.getUsername(token);
         String role = jwtTokenUtils.getRole(token);
         Long id = jwtTokenUtils.getId(token);
+        User user = userService.findByUsername(username).get();
         List<Prize> prizes = prizeService.allUserPrizes(username);
-        return ResponseEntity.ok(new GetUserDataResponse(id, username, role, prizes));
+        List<Shot> shots = shotService.findByUser(user);
+        return ResponseEntity.ok(new GetUserDataResponse(id, username, role, prizes, shots));
     }
 
     @GetMapping("/data/get_ship_data_by_id/{id}")
@@ -61,8 +60,7 @@ public class DataController {
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No field with this id"), HttpStatus.BAD_REQUEST);
         Field field = cur_field.get();
         List<Ship> ships = shipService.findByField(field);
-        Integer size = field.getSize();
-        return ResponseEntity.ok(new GetFieldDataByIdResponse(size, ships));
+        return ResponseEntity.ok(new GetFieldDataByIdResponse(field, ships));
     }
 
     @GetMapping("/data/get_invitation_data_by_id/{id}")

@@ -58,12 +58,15 @@ public class GameController {
                 takeAShotRequest.getY(),
                 field);
         if (cur_ship.isEmpty())
-            return ResponseEntity.ok(new TakeAShotResponse("MISS"));
+            return ResponseEntity.ok(new TakeAShotResponse("MISS", null));
         Ship ship = cur_ship.get();
+        if (!shipService.isActive(ship))
+            return ResponseEntity.ok(new TakeAShotResponse("The prize has already been taken", null));
         Prize prize = new Prize();
         prize.setUser(user);
         prize.setShip(ship);
         prizeService.createNewPrize(prize);
-        return ResponseEntity.ok(new TakeAShotResponse("HIT"));
+        shipService.deactivateShip(ship);
+        return ResponseEntity.ok(new TakeAShotResponse("HIT", prize));
     }
 }

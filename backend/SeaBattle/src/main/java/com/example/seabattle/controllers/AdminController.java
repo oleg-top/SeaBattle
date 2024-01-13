@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @RestController
@@ -37,6 +38,7 @@ public class AdminController {
     public ResponseEntity<?> createField(@RequestBody FieldCreateRequest fieldCreateRequest) {
         Field field = new Field();
         field.setSize(fieldCreateRequest.getSize());
+        field.setDescription(fieldCreateRequest.getDescription());
         fieldService.createNewField(field);
         return ResponseEntity.ok(new FieldCreateResponse("Field has been created successfully", field.getId()));
     }
@@ -56,19 +58,49 @@ public class AdminController {
         return ResponseEntity.ok(new AddShipResponse("Ship has been added successfully.", ship.getId()));
     }
 
+    @PostMapping("/field/delete_ship")
+    public ResponseEntity<?> deleteShip(@RequestBody DeleteShipRequest deleteShipRequest) {
+        Optional<Ship> cur_ship = shipService.findById(deleteShipRequest.getId());
+        if (cur_ship.isEmpty())
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
+        Ship ship = cur_ship.get();
+        shipService.deleteShip(ship);
+        return ResponseEntity.ok("The ship has been deleted successfully");
+    }
+
     @PostMapping("/field/invite_user")
-    public ResponseEntity<?> inviteUser(@RequestBody InviteUserRequest inviteUserRequest) {
-        Shot shot = new Shot();
-        shot.setAmount(inviteUserRequest.getAmount());
-        Optional<User> req_user = userService.findById(inviteUserRequest.getUserId());
-        Optional<Field> req_field = fieldService.findById(inviteUserRequest.getFieldId());
+    public ResponseEntity<?> inviteUserToField(@RequestBody InviteUserToFieldRequest inviteUserToFieldRequest) {
+        Optional<User> req_user = userService.findById(inviteUserToFieldRequest.getUserId());
+        Optional<Field> req_field = fieldService.findById(inviteUserToFieldRequest.getFieldId());
         if (req_user.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No user with this id"), HttpStatus.BAD_REQUEST);
         if (req_field.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No field with this id"), HttpStatus.BAD_REQUEST);
+        Shot shot = new Shot();
+        shot.setAmount(inviteUserToFieldRequest.getAmount());
         shot.setUser(req_user.get());
         shot.setField(req_field.get());
-        shotService.createNewShot(shot);
+        boolean hasCreated = shotService.createNewShot(shot);
+        if (!hasCreated)
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "The invitation already exists"), HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(new InviteUserResponse("Invitation has been created successfully", shot.getId()));
+    }
+
+    @PostMapping("/field/delete_user")
+    public ResponseEntity<?> deleteUserFromField(@RequestBody DeleteUserFromFieldRequest deleteUserFromFieldRequest) {
+        Optional<User> cur_user = userService.findById(deleteUserFromFieldRequest.getUserId());
+        if (cur_user.isEmpty())
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No user with this id"), HttpStatus.BAD_REQUEST);
+        User user = cur_user.get();
+        Optional<Field> cur_field = fieldService.findById(deleteUserFromFieldRequest.getFieldId());
+        if (cur_field.isEmpty())
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No field with this id"), HttpStatus.BAD_REQUEST);
+        Field field = cur_field.get();
+        Optional<Shot> cur_shot = shotService.findByUserAndField(user, field);
+        if (cur_shot.isEmpty())
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No invitation for this user on this field"), HttpStatus.BAD_REQUEST);
+        Shot shot = cur_shot.get();
+        shotService.delete(shot);
+        return ResponseEntity.ok("Successfully deleted");
     }
 }
