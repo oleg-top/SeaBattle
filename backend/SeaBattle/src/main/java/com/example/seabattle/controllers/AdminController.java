@@ -10,11 +10,13 @@ import com.example.seabattle.services.FieldService;
 import com.example.seabattle.services.ShipService;
 import com.example.seabattle.services.ShotService;
 import com.example.seabattle.services.UserService;
+import com.example.seabattle.utils.FileStorageUtils;
 import com.example.seabattle.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +35,7 @@ public class AdminController {
     private final ShotService shotService;
 
     private final JwtTokenUtils jwtTokenUtils;
+    private final FileStorageUtils fileStorageUtils;
 
     @PostMapping("/field/create")
     public ResponseEntity<?> createField(@RequestBody FieldCreateRequest fieldCreateRequest) {
@@ -44,17 +47,23 @@ public class AdminController {
     }
 
     @PostMapping("/field/add_ship")
-    public ResponseEntity<?> addShip(@RequestBody AddShipRequest addShipRequest) {
+    public ResponseEntity<?> addShip(@ModelAttribute AddShipRequest addShipRequest) {
         Ship ship = new Ship();
         ship.setDescription(addShipRequest.getDescription());
         ship.setName(addShipRequest.getName());
-        Optional<Field> cur = fieldService.findById(addShipRequest.getFieldId());
-        if (cur.isEmpty())
+        Optional<Field> cur_field = fieldService.findById(addShipRequest.getFieldId());
+        if (cur_field.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No field with this id"), HttpStatus.BAD_REQUEST);
-        ship.setField(cur.get());
+        Optional<Ship> cur_ship = shipService.findByCoordinatesOnField(
+                addShipRequest.getX(),
+                addShipRequest.getY(),
+                cur_field.get());
+        if (cur_ship.isPresent())
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Ship on given coordinates and field is already existing"), HttpStatus.BAD_REQUEST);
+        ship.setField(cur_field.get());
         ship.setX(addShipRequest.getX());
         ship.setY(addShipRequest.getY());
-        shipService.createNewShip(ship);
+        shipService.createNewShip(ship, addShipRequest.getFile());
         return ResponseEntity.ok(new AddShipResponse("Ship has been added successfully.", ship.getId()));
     }
 

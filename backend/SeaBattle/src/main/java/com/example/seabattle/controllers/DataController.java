@@ -5,15 +5,15 @@ import com.example.seabattle.dtos.GetUserDataResponse;
 import com.example.seabattle.exceptions.AppError;
 import com.example.seabattle.models.*;
 import com.example.seabattle.services.*;
+import com.example.seabattle.utils.FileStorageUtils;
 import com.example.seabattle.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +30,7 @@ public class DataController {
     private final ShotService shotService;
 
     private final JwtTokenUtils jwtTokenUtils;
+    private final FileStorageUtils fileStorageUtils;
 
     @GetMapping("/data/get_current_user_data")
     public ResponseEntity<?> getUserData(@RequestHeader("Authorization") String authorization) {
@@ -69,5 +70,17 @@ public class DataController {
         if (cur_shot.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No invitation with this id"), HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(cur_shot.get());
+    }
+
+    @GetMapping("/data/images/ships/{id}")
+    public ResponseEntity<?> getImage(@PathVariable Long id) {
+        Optional<Ship> cur_ship = shipService.findById(id);
+        if (cur_ship.isEmpty())
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
+        Ship ship = cur_ship.get();
+        String filename = ship.getImage();
+        log.debug(filename);
+        Resource file = fileStorageUtils.load(filename);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 }
