@@ -36,18 +36,43 @@ public class ShipService {
         return ship.getActive();
     }
 
+    public Boolean isEmpty(Ship ship) {
+        return ship.getEmpty();
+    }
+
     public void deactivateShip(Ship ship) {
         ship.setActive(false);
         shipRepository.save(ship);
     }
 
+    public void assignShipToField(Ship ship, Field field, Integer x, Integer y) {
+        ship.setField(field);
+        ship.setX(x);
+        ship.setY(y);
+        shipRepository.save(ship);
+    }
+
     public void createNewShip(Ship ship, MultipartFile file) {
         ship.setActive(true);
+        ship.setEmpty(false);
         shipRepository.save(ship);
         String filename = ship.getId() + "_" + file.getOriginalFilename();
         ship.setImage(filename);
         shipRepository.save(ship);
         fileStorageUtils.save(file, filename);
+    }
+
+    public void createNewEmptyShip(Integer x, Integer y, Field field) {
+        Ship empty_ship = new Ship();
+        empty_ship.setName("Пусто");
+        empty_ship.setDescription("Здесь ничего нет");
+        empty_ship.setActive(false);
+        empty_ship.setEmpty(true);
+        empty_ship.setField(field);
+        empty_ship.setX(x);
+        empty_ship.setY(y);
+        empty_ship.setImage("empty_ship.png");
+        shipRepository.save(empty_ship);
     }
 
     @Transactional

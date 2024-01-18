@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @RestController
@@ -46,28 +45,18 @@ public class AdminController {
         return ResponseEntity.ok(new FieldCreateResponse("Field has been created successfully", field.getId()));
     }
 
-    @PostMapping("/field/add_ship")
-    public ResponseEntity<?> addShip(@ModelAttribute AddShipRequest addShipRequest) {
+    @PostMapping("/ship/create")
+    public ResponseEntity<?> createShip(@ModelAttribute CreateShipRequest createShipRequest) {
         Ship ship = new Ship();
-        ship.setDescription(addShipRequest.getDescription());
-        ship.setName(addShipRequest.getName());
-        Optional<Field> cur_field = fieldService.findById(addShipRequest.getFieldId());
-        if (cur_field.isEmpty())
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No field with this id"), HttpStatus.BAD_REQUEST);
-        Optional<Ship> cur_ship = shipService.findByCoordinatesOnField(
-                addShipRequest.getX(),
-                addShipRequest.getY(),
-                cur_field.get());
-        if (cur_ship.isPresent())
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Ship on given coordinates and field is already existing"), HttpStatus.BAD_REQUEST);
-        ship.setField(cur_field.get());
-        ship.setX(addShipRequest.getX());
-        ship.setY(addShipRequest.getY());
-        shipService.createNewShip(ship, addShipRequest.getFile());
-        return ResponseEntity.ok(new AddShipResponse("Ship has been added successfully.", ship.getId()));
+        ship.setName(createShipRequest.getName());
+        ship.setDescription(createShipRequest.getDescription());
+        ship.setX(-1);
+        ship.setY(-1);
+        shipService.createNewShip(ship, createShipRequest.getFile());
+        return ResponseEntity.ok(new AddShipResponse("Ship has been created successfully.", ship.getId()));
     }
 
-    @PostMapping("/field/delete_ship")
+    @PostMapping("/ship/delete")
     public ResponseEntity<?> deleteShip(@RequestBody DeleteShipRequest deleteShipRequest) {
         Optional<Ship> cur_ship = shipService.findById(deleteShipRequest.getId());
         if (cur_ship.isEmpty())
@@ -75,6 +64,27 @@ public class AdminController {
         Ship ship = cur_ship.get();
         shipService.deleteShip(ship);
         return ResponseEntity.ok("The ship has been deleted successfully");
+    }
+
+    @PostMapping("/field/assign_ship")
+    public ResponseEntity<?> assignShip(@RequestBody AssignShipRequest assignShipRequest) {
+        Optional<Field> cur_field = fieldService.findById(assignShipRequest.getFieldId());
+        if (cur_field.isEmpty())
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No field with this id"), HttpStatus.BAD_REQUEST);
+        Field field = cur_field.get();
+        Optional<Ship> cur_ship = shipService.findById(assignShipRequest.getShipId());
+        if (cur_ship.isEmpty())
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
+        Ship ship = cur_ship.get();
+        Optional<Ship> ship_on_cord = shipService.findByCoordinatesOnField(
+                assignShipRequest.getX(),
+                assignShipRequest.getY(),
+                field
+        );
+        if (ship_on_cord.isPresent())
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "The ship on given coordinates and field is already existing"), HttpStatus.BAD_REQUEST);
+        shipService.assignShipToField(ship, field, assignShipRequest.getX(), assignShipRequest.getY());
+        return ResponseEntity.ok("The ship has been assigned successfully");
     }
 
     @PostMapping("/field/invite_user")
@@ -95,7 +105,7 @@ public class AdminController {
         return ResponseEntity.ok(new InviteUserResponse("Invitation has been created successfully", shot.getId()));
     }
 
-    @PostMapping("/field/delete_user")
+    @PostMapping("/field/remove_user")
     public ResponseEntity<?> deleteUserFromField(@RequestBody DeleteUserFromFieldRequest deleteUserFromFieldRequest) {
         Optional<User> cur_user = userService.findById(deleteUserFromFieldRequest.getUserId());
         if (cur_user.isEmpty())

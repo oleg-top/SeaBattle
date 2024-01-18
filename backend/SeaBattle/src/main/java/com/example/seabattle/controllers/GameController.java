@@ -57,11 +57,23 @@ public class GameController {
                 takeAShotRequest.getX(),
                 takeAShotRequest.getY(),
                 field);
-        if (cur_ship.isEmpty())
+        if (cur_ship.isEmpty()) {
+            shipService.createNewEmptyShip(
+                    takeAShotRequest.getX(),
+                    takeAShotRequest.getY(),
+                    field
+            );
             return ResponseEntity.ok(new TakeAShotResponse("MISS", null));
+        }
         Ship ship = cur_ship.get();
-        if (!shipService.isActive(ship))
-            return ResponseEntity.ok(new TakeAShotResponse("The prize has already been taken", null));
+        if (!shipService.isActive(ship) && !shipService.isEmpty(ship)) {
+            shotService.updateAmount(shot, shot.getAmount() + 1);
+            return ResponseEntity.ok(new TakeAShotResponse("INACTIVE", null));
+        }
+        if (!shipService.isActive(ship) && shipService.isEmpty(ship)) {
+            shotService.updateAmount(shot, shot.getAmount() + 1);
+            return ResponseEntity.ok(new TakeAShotResponse("EMPTY", null));
+        }
         Prize prize = new Prize();
         prize.setUser(user);
         prize.setShip(ship);
