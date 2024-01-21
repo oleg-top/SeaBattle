@@ -1,0 +1,69 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+    Личный кабинет
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="../../static/css/user_profile.css">
+{% endblock %}
+
+{% block content %}
+    <div class="headers">
+        <h1 style="font-size: 30px">Личный кабинет</h1>
+        <a href="/logout">Выход</a>
+    </div>
+
+    <div style="display: flex">
+        <div id="left-panel">
+            <div class="user-info">
+                <img id="avatar" src="../../static/src/98530161.jpg" alt="фото профиля">
+                <div class="user-text">
+                    <strong id="username">{{ username }}</strong>
+                    <p>ID: <strong style="color: #feb626">{{ id }}</strong></p>
+                </div>
+
+            </div>
+
+
+            <ul id="prizes" style="margin-top: 10px">
+                <h4>призы</h4>
+                <li>
+                    <div class="prize-box">
+                        <img src="../../static/src/98530161.jpg" alt="фото приза" width=100 height="100">
+                        <div class="prize-desc">
+                            <strong>Lorem Ipsum</strong>
+                            <br>
+                            <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                Aliquam lectus risus, finibus ornare vestibulum et, feugiat quis dui.
+                                Vivamus sit amet dolor et magna facilisis rhoncus. Curabitur maximus est sed porta scelerisque.
+                                Sed suscipit, arcu volutpat feugiat posuere, eros nisi tristique nibh, mollis vehicula lectus tortor eu purus.
+                                </span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div id="right-panel">
+            <h4>поля</h4>
+            <button class="field-button" onclick="handleFieldButtonClick('Field 1', 'Description for Field 1')">
+
+                <strong>Lorem Ipsum</strong>
+                <br>
+                <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Aliquam lectus risus, finibus ornare vestibulum et, feugiat quis dui.
+                    Vivamus sit amet dolor et magna facilisis rhoncus. Curabitur maximus est sed porta scelerisque.
+                    Sed suscipit, arcu volutpat feugiat posuere, eros nisi tristique nibh, mollis vehicula lectus tortor eu purus.
+                    </span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function handleFieldButtonClick(fieldName, fieldDescription) {
+            alert("Button clicked for field: " + fieldName + "\nDescription: " + fieldDescription);
+            // переход на поле
+        }
+    </script>
+{% endblock %}

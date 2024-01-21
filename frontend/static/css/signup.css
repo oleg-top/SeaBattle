@@ -58,14 +58,6 @@ h1 {
     background-color: #34495e;
 }
 
-.register-container {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-}
-
 .login-container {
     background-color: #1d1d1d;
     flex: 1;
@@ -75,7 +67,7 @@ h1 {
     align-items: center;
     justify-content: center;
     margin-bottom: 30px;
-    max-width: 40%;
+    max-width: 100%;
 }
 
 .form-group {
@@ -101,7 +93,7 @@ label {
     border-radius: 15px;
     cursor: pointer;
     transition: transform 0.3s ease;
-    width: 30%;
+
 }
 
 .action-button:hover {
@@ -117,62 +109,6 @@ label {
     color: #feb626;
     text-decoration: underline;
     font-size: 18px;
-}
-
-.overlay {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.7);
-    transition: opacity 0.2s;
-    visibility: hidden;
-    opacity: 0;
-}
-
-.overlay:target {
-    visibility: visible;
-    opacity: 1;
-}
-
-.popup {
-    margin: 70px auto;
-    padding: 20px;
-    background: #1d1d1d;
-    border-radius: 5px;
-    width: 40%;
-    position: relative;
-    transition: all 0.2s ease-in-out;
-}
-
-.close {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    transition: all 200ms;
-    font-size: 30px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #fff;
-}
-
-.close:hover {
-    color: #feb626;
-}
-
-.register-container .form-group {
-    width: 90%;
-}
-
-.register-container .action-button {
-    width: 55%;
-    justify-content: center;
-}
-
-.checkbox-admin {
-    color: #feb626;
-    background-color: #feb626;
 }
 
 <!--
