@@ -1,0 +1,23 @@
+body {
+    background-color: #1d1d1d;
+    color: #fafafa;
+    font-family: "Bahnschrift", sans-serif;
+    margin: 0;
+    align-self: center;
+    display: table;
+    height: 100%;
+    padding: 0;
+    width: 100%;
+}
+
+h1 {
+    font-size: 70px;
+    margin-top: 19%;
+}
+
+div {
+
+    text-align: center;
+    display: table-cell;
+    vertical-align: center;
+}

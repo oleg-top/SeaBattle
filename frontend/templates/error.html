@@ -1,0 +1,15 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+    Ошибка
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="../static/css/error_msg.css">
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Ошибка: {{ error }}</h1>
+    </div>
+{% endblock %}
