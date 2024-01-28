@@ -52,10 +52,6 @@ public class DataController {
 
     @GetMapping("/data/get_ship_data_by_id/{id}")
     public ResponseEntity<?> getShipDataById(@PathVariable("id") Long id) {
-        if (id == null) {
-            log.error("Empty entry data on /data/get_ship_data_by_id/{id}");
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
-        }
         Optional<Ship> cur_ship = shipService.findById(id);
         if (cur_ship.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
@@ -78,10 +74,6 @@ public class DataController {
 
     @GetMapping("/data/get_field_data_by_id/{id}")
     public ResponseEntity<?> getFieldDataById(@PathVariable("id") Long id) {
-        if (id == null) {
-            log.error("Empty entry data on /data/get_field_data_by_id/{id}");
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
-        }
         Optional<Field> cur_field = fieldService.findById(id);
         if (cur_field.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No field with this id"), HttpStatus.BAD_REQUEST);
@@ -92,10 +84,6 @@ public class DataController {
 
     @GetMapping("/data/get_invitation_data_by_id/{id}")
     public ResponseEntity<?> getShotDataById(@PathVariable("id") Long id) {
-        if (id == null) {
-            log.error("Empty entry data on /data/get_invitation_data_by_id/{id}");
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
-        }
         Optional<Shot> cur_shot = shotService.findById(id);
         if (cur_shot.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No invitation with this id"), HttpStatus.BAD_REQUEST);
@@ -104,10 +92,6 @@ public class DataController {
 
     @GetMapping("/data/images/ships/{id}")
     public ResponseEntity<?> getImage(@PathVariable Long id) {
-        if (id == null) {
-            log.error("Empty entry data on /data/images/ships/{id}");
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
-        }
         Optional<Ship> cur_ship = shipService.findById(id);
         if (cur_ship.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);

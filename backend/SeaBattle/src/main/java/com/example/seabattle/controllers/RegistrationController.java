@@ -25,23 +25,22 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public ResponseEntity<?> registration(@RequestBody RegistrationRequest registrationRequest) {
-        if (userService.findByUsername(registrationRequest.getUsername()).isPresent()) {
-            log.debug(String.format("User with username '%s' already exists", registrationRequest.getUsername()));
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),"Пользователь с таким именем уже существует"), HttpStatus.BAD_REQUEST);
-        }
-        if (registrationRequest.getUsername() == null
-                || registrationRequest.getPassword() == null
-                || registrationRequest.getUsername().isEmpty()
-                || registrationRequest.getPassword().isEmpty()
-                || registrationRequest.getIsAdmin() == null)
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Empty entry data"), HttpStatus.BAD_REQUEST);
-        User user = new User();
-        user.setUsername(registrationRequest.getUsername());
-        user.setPassword(registrationRequest.getPassword());
-        userService.createNewUser(user, registrationRequest.getIsAdmin());
-        log.info(String.format("User '%s' has been created successfully", registrationRequest.getUsername()));
+        try {
+            if (userService.findByUsername(registrationRequest.getUsername()).isPresent()) {
+                log.debug(String.format("User with username '%s' already exists", registrationRequest.getUsername()));
+                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким именем уже существует"), HttpStatus.BAD_REQUEST);
+            }
+            User user = new User();
+            user.setUsername(registrationRequest.getUsername());
+            user.setPassword(registrationRequest.getPassword());
+            userService.createNewUser(user, registrationRequest.getIsAdmin());
+            log.info(String.format("User '%s' has been created successfully", registrationRequest.getUsername()));
 
-        String token = jwtTokenUtils.generateToken(user);
-        return ResponseEntity.ok(new RegistrationResponse(token));
+            String token = jwtTokenUtils.generateToken(user);
+            return ResponseEntity.ok(new RegistrationResponse(token));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(new AppError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -36,14 +36,6 @@ public class AdminController {
     @PostMapping("/field/create")
     public ResponseEntity<?> createField(@RequestBody FieldCreateRequest fieldCreateRequest) {
         try {
-            if (fieldCreateRequest.getSize() == null
-                    || fieldCreateRequest.getName() == null
-                    || fieldCreateRequest.getDescription() == null
-                    || fieldCreateRequest.getDescription().isEmpty()
-                    || fieldCreateRequest.getName().isEmpty()) {
-                log.error("Empty entry data on /field/create");
-                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Empty entry data"), HttpStatus.BAD_REQUEST);
-            }
             Field field = new Field();
             field.setSize(fieldCreateRequest.getSize());
             field.setName(fieldCreateRequest.getName());
@@ -60,13 +52,6 @@ public class AdminController {
     @PostMapping("/ship/create")
     public ResponseEntity<?> createShip(@ModelAttribute CreateShipRequest createShipRequest) {
         try {
-            if (createShipRequest.getName() == null
-                    || createShipRequest.getDescription() == null
-                    || createShipRequest.getName().isEmpty()
-                    || createShipRequest.getDescription().isEmpty()){
-                log.error("Empty entry data on /ship/create");
-                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Empty entry data"), HttpStatus.BAD_REQUEST);
-            }
             Ship ship = new Ship();
             ship.setName(createShipRequest.getName());
             ship.setDescription(createShipRequest.getDescription());
@@ -83,10 +68,6 @@ public class AdminController {
     @PostMapping("/ship/delete")
     public ResponseEntity<?> deleteShip(@RequestBody DeleteShipRequest deleteShipRequest) {
         try {
-            if (deleteShipRequest.getId() == null) {
-                log.error("Empty entry data on /ship/delete");
-                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Empty entry data"), HttpStatus.BAD_REQUEST);
-            }
             Optional<Ship> cur_ship = shipService.findById(deleteShipRequest.getId());
             if (cur_ship.isEmpty())
                 return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
@@ -102,13 +83,6 @@ public class AdminController {
     @PostMapping("/field/assign_ship")
     public ResponseEntity<?> assignShip(@RequestBody AssignShipRequest assignShipRequest) {
         try {
-            if (assignShipRequest.getShipId() == null
-                || assignShipRequest.getX() == null
-                || assignShipRequest.getY() == null
-                || assignShipRequest.getFieldId() == null) {
-                log.error("Empty entry data on /field/assign_ship");
-                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Empty entry data"), HttpStatus.BAD_REQUEST);
-            }
             Optional<Field> cur_field = fieldService.findById(assignShipRequest.getFieldId());
             if (cur_field.isEmpty())
                 return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No field with this id"), HttpStatus.BAD_REQUEST);
@@ -136,12 +110,6 @@ public class AdminController {
     @PostMapping("/field/invite_user")
     public ResponseEntity<?> inviteUserToField(@RequestBody InviteUserToFieldRequest inviteUserToFieldRequest) {
         try {
-            if (inviteUserToFieldRequest.getFieldId() == null
-                || inviteUserToFieldRequest.getUserId() == null
-                || inviteUserToFieldRequest.getAmount() == null) {
-                log.error("Empty entry data on /field/invite_user");
-                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Empty entry data"), HttpStatus.BAD_REQUEST);
-            }
             Optional<User> req_user = userService.findById(inviteUserToFieldRequest.getUserId());
             Optional<Field> req_field = fieldService.findById(inviteUserToFieldRequest.getFieldId());
             if (req_user.isEmpty())
@@ -166,11 +134,6 @@ public class AdminController {
     @PostMapping("/field/remove_user")
     public ResponseEntity<?> deleteUserFromField(@RequestBody DeleteUserFromFieldRequest deleteUserFromFieldRequest) {
         try {
-            if (deleteUserFromFieldRequest.getFieldId() == null
-                || deleteUserFromFieldRequest.getUserId() == null) {
-                log.error("Empty entry data on /field/remove_user");
-                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Empty entry data"), HttpStatus.BAD_REQUEST);
-            }
             Optional<User> cur_user = userService.findById(deleteUserFromFieldRequest.getUserId());
             if (cur_user.isEmpty())
                 return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No user with this id"), HttpStatus.BAD_REQUEST);

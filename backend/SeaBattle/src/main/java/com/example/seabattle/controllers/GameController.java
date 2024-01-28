@@ -34,59 +34,58 @@ public class GameController {
     public ResponseEntity<?> takeAShot(
             @RequestHeader("Authorization") String authorization,
             @RequestBody TakeAShotRequest takeAShotRequest) {
-        if (!jwtTokenUtils.validateToken(authorization)) {
-            log.error("Incorrect jwt token");
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Wrong authorization token"), HttpStatus.BAD_REQUEST);
-        }
-        if (takeAShotRequest.getFieldId() == null
-            || takeAShotRequest.getX() == null
-            || takeAShotRequest.getY() == null) {
-            log.error("Empty entry data on /game/take_a_shot");
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Empty entry data"), HttpStatus.BAD_REQUEST);
-        }
-        String token = authorization.substring(7);
-        Long userId = jwtTokenUtils.getId(token);
-        Optional<User> cur_user = userService.findById(userId);
-        if (cur_user.isEmpty())
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No user with this id"), HttpStatus.BAD_REQUEST);
-        Optional<Field> cur_field = fieldService.findById(takeAShotRequest.getFieldId());
-        if (cur_field.isEmpty())
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No field with this id"), HttpStatus.BAD_REQUEST);
-        User user = cur_user.get();
-        Field field = cur_field.get();
-        Optional<Shot> cur_shot = shotService.findByUserAndField(user, field);
-        if (cur_shot.isEmpty())
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No invitation with this id"), HttpStatus.BAD_REQUEST);
-        Shot shot = cur_shot.get();
-        if (!shotService.correctAmount(shot))
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "The amount of shots is 0"), HttpStatus.BAD_REQUEST);
-        shotService.updateAmount(shot, shot.getAmount() - 1);
-        Optional<Ship> cur_ship = shipService.findByCoordinatesOnField(
-                takeAShotRequest.getX(),
-                takeAShotRequest.getY(),
-                field);
-        if (cur_ship.isEmpty()) {
-            shipService.createNewEmptyShip(
+        try {
+            if (!jwtTokenUtils.validateToken(authorization)) {
+                log.error("Incorrect jwt token");
+                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Wrong authorization token"), HttpStatus.BAD_REQUEST);
+            }
+            String token = authorization.substring(7);
+            Long userId = jwtTokenUtils.getId(token);
+            Optional<User> cur_user = userService.findById(userId);
+            if (cur_user.isEmpty())
+                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No user with this id"), HttpStatus.BAD_REQUEST);
+            Optional<Field> cur_field = fieldService.findById(takeAShotRequest.getFieldId());
+            if (cur_field.isEmpty())
+                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No field with this id"), HttpStatus.BAD_REQUEST);
+            User user = cur_user.get();
+            Field field = cur_field.get();
+            Optional<Shot> cur_shot = shotService.findByUserAndField(user, field);
+            if (cur_shot.isEmpty())
+                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No invitation with this id"), HttpStatus.BAD_REQUEST);
+            Shot shot = cur_shot.get();
+            if (!shotService.correctAmount(shot))
+                return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "The amount of shots is 0"), HttpStatus.BAD_REQUEST);
+            shotService.updateAmount(shot, shot.getAmount() - 1);
+            Optional<Ship> cur_ship = shipService.findByCoordinatesOnField(
                     takeAShotRequest.getX(),
                     takeAShotRequest.getY(),
-                    field
-            );
-            return ResponseEntity.ok(new TakeAShotResponse("MISS", null));
+                    field);
+            if (cur_ship.isEmpty()) {
+                shipService.createNewEmptyShip(
+                        takeAShotRequest.getX(),
+                        takeAShotRequest.getY(),
+                        field
+                );
+                return ResponseEntity.ok(new TakeAShotResponse("MISS", null));
+            }
+            Ship ship = cur_ship.get();
+            if (!shipService.isActive(ship) && !shipService.isEmpty(ship)) {
+                shotService.updateAmount(shot, shot.getAmount() + 1);
+                return ResponseEntity.ok(new TakeAShotResponse("INACTIVE", null));
+            }
+            if (!shipService.isActive(ship) && shipService.isEmpty(ship)) {
+                shotService.updateAmount(shot, shot.getAmount() + 1);
+                return ResponseEntity.ok(new TakeAShotResponse("EMPTY", null));
+            }
+            Prize prize = new Prize();
+            prize.setUser(user);
+            prize.setShip(ship);
+            prizeService.createNewPrize(prize);
+            shipService.deactivateShip(ship);
+            return ResponseEntity.ok(new TakeAShotResponse("HIT", prize));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(new AppError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        Ship ship = cur_ship.get();
-        if (!shipService.isActive(ship) && !shipService.isEmpty(ship)) {
-            shotService.updateAmount(shot, shot.getAmount() + 1);
-            return ResponseEntity.ok(new TakeAShotResponse("INACTIVE", null));
-        }
-        if (!shipService.isActive(ship) && shipService.isEmpty(ship)) {
-            shotService.updateAmount(shot, shot.getAmount() + 1);
-            return ResponseEntity.ok(new TakeAShotResponse("EMPTY", null));
-        }
-        Prize prize = new Prize();
-        prize.setUser(user);
-        prize.setShip(ship);
-        prizeService.createNewPrize(prize);
-        shipService.deactivateShip(ship);
-        return ResponseEntity.ok(new TakeAShotResponse("HIT", prize));
     }
 }
