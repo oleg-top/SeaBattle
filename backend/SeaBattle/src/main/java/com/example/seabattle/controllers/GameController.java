@@ -34,8 +34,16 @@ public class GameController {
     public ResponseEntity<?> takeAShot(
             @RequestHeader("Authorization") String authorization,
             @RequestBody TakeAShotRequest takeAShotRequest) {
-        if (!jwtTokenUtils.validateToken(authorization))
+        if (!jwtTokenUtils.validateToken(authorization)) {
+            log.error("Incorrect jwt token");
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Wrong authorization token"), HttpStatus.BAD_REQUEST);
+        }
+        if (takeAShotRequest.getFieldId() == null
+            || takeAShotRequest.getX() == null
+            || takeAShotRequest.getY() == null) {
+            log.error("Empty entry data on /game/take_a_shot");
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Empty entry data"), HttpStatus.BAD_REQUEST);
+        }
         String token = authorization.substring(7);
         Long userId = jwtTokenUtils.getId(token);
         Optional<User> cur_user = userService.findById(userId);

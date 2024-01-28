@@ -1,5 +1,6 @@
 package com.example.seabattle.controllers;
 
+import com.example.seabattle.dtos.GetAllShipsResponse;
 import com.example.seabattle.dtos.GetFieldDataByIdResponse;
 import com.example.seabattle.dtos.GetUserDataResponse;
 import com.example.seabattle.exceptions.AppError;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,8 +36,10 @@ public class DataController {
 
     @GetMapping("/data/get_current_user_data")
     public ResponseEntity<?> getUserData(@RequestHeader("Authorization") String authorization) {
-        if (!jwtTokenUtils.validateToken(authorization))
+        if (!jwtTokenUtils.validateToken(authorization)) {
+            log.error("Incorrect jwt token");
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Wrong authorization token"), HttpStatus.BAD_REQUEST);
+        }
         String token = authorization.substring(7);
         String username = jwtTokenUtils.getUsername(token);
         String role = jwtTokenUtils.getRole(token);
@@ -48,14 +52,36 @@ public class DataController {
 
     @GetMapping("/data/get_ship_data_by_id/{id}")
     public ResponseEntity<?> getShipDataById(@PathVariable("id") Long id) {
+        if (id == null) {
+            log.error("Empty entry data on /data/get_ship_data_by_id/{id}");
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
+        }
         Optional<Ship> cur_ship = shipService.findById(id);
         if (cur_ship.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(cur_ship.get());
     }
 
+    @GetMapping("/data/get_all_ships")
+    public ResponseEntity<?> getAllShips() {
+        Iterable<Ship> ships = shipService.getAllShips();
+        List<String> names = new ArrayList<>(),
+                descriptions = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
+        for (Ship ship: ships) {
+            names.add(ship.getName());
+            descriptions.add(ship.getDescription());
+            ids.add(ship.getId());
+        }
+        return ResponseEntity.ok(new GetAllShipsResponse(names, descriptions, ids));
+    }
+
     @GetMapping("/data/get_field_data_by_id/{id}")
     public ResponseEntity<?> getFieldDataById(@PathVariable("id") Long id) {
+        if (id == null) {
+            log.error("Empty entry data on /data/get_field_data_by_id/{id}");
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
+        }
         Optional<Field> cur_field = fieldService.findById(id);
         if (cur_field.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No field with this id"), HttpStatus.BAD_REQUEST);
@@ -66,6 +92,10 @@ public class DataController {
 
     @GetMapping("/data/get_invitation_data_by_id/{id}")
     public ResponseEntity<?> getShotDataById(@PathVariable("id") Long id) {
+        if (id == null) {
+            log.error("Empty entry data on /data/get_invitation_data_by_id/{id}");
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
+        }
         Optional<Shot> cur_shot = shotService.findById(id);
         if (cur_shot.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No invitation with this id"), HttpStatus.BAD_REQUEST);
@@ -74,6 +104,10 @@ public class DataController {
 
     @GetMapping("/data/images/ships/{id}")
     public ResponseEntity<?> getImage(@PathVariable Long id) {
+        if (id == null) {
+            log.error("Empty entry data on /data/images/ships/{id}");
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);
+        }
         Optional<Ship> cur_ship = shipService.findById(id);
         if (cur_ship.isEmpty())
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "No ship with this id"), HttpStatus.BAD_REQUEST);

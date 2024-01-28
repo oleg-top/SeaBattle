@@ -32,6 +32,10 @@ public class ShipService {
         return shipRepository.findByXAndYAndField(x, y, field);
     }
 
+    public Iterable<Ship> getAllShips() {
+        return shipRepository.findAll();
+    }
+
     public Boolean isActive(Ship ship) {
         return ship.getActive();
     }

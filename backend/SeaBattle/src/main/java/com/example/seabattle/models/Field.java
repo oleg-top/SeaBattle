@@ -13,5 +13,7 @@ public class Field {
 
     private Integer size;
 
+    private String name;
+
     private String description;
 }

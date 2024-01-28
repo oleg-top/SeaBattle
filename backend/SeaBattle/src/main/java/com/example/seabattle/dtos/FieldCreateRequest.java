@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FieldCreateRequest {
     private Integer size;
+    private String name;
     private String description;
 }

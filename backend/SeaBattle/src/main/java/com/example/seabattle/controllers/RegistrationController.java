@@ -29,6 +29,12 @@ public class RegistrationController {
             log.debug(String.format("User with username '%s' already exists", registrationRequest.getUsername()));
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),"Пользователь с таким именем уже существует"), HttpStatus.BAD_REQUEST);
         }
+        if (registrationRequest.getUsername() == null
+                || registrationRequest.getPassword() == null
+                || registrationRequest.getUsername().isEmpty()
+                || registrationRequest.getPassword().isEmpty()
+                || registrationRequest.getIsAdmin() == null)
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Empty entry data"), HttpStatus.BAD_REQUEST);
         User user = new User();
         user.setUsername(registrationRequest.getUsername());
         user.setPassword(registrationRequest.getPassword());
