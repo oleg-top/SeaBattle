@@ -63,8 +63,7 @@ public class AdminController {
             if (createShipRequest.getName() == null
                     || createShipRequest.getDescription() == null
                     || createShipRequest.getName().isEmpty()
-                    || createShipRequest.getDescription().isEmpty()
-                    || createShipRequest.getFile() == null) {
+                    || createShipRequest.getDescription().isEmpty()){
                 log.error("Empty entry data on /ship/create");
                 return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Empty entry data"), HttpStatus.BAD_REQUEST);
             }
