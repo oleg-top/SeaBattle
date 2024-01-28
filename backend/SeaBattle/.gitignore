@@ -31,5 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
-uploads/
 !uploads/empty_ship.png
+uploads/
