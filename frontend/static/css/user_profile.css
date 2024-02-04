@@ -6,7 +6,7 @@ body {
     color: #fafafa;
 }
 
-div a {
+.a-header {
     text-align: right;
     margin-left: auto;
     margin-right: 20px;
@@ -41,6 +41,7 @@ div a {
     background-color: #121212;
     border-radius: 10px;
     display: flex;
+
 }
 
 .prize-desc {
@@ -53,12 +54,15 @@ div a {
 }
 
 #right-panel button strong {
-    font-size: 20px;
+    font-size: 25px;
     align-self: center;
 }
 
+span {
+    font-size: 18px;
+}
+
 #container {
-    display: flex;
     max-width: 1200px;
     margin: 20px auto;
     background-color: #fff;
@@ -111,6 +115,29 @@ div a {
     text-align: left;
 }
 
-h4 {
+a {
     font-size: 28px;
+    color: #fafafa;
+}
+
+a:hover {
+    color: #ff9100;
+}
+
+.new {
+    color: #212121;
+    background-color: #feb626;
+    border-radius: 20px;
+    border-color: #feb626;
+    border-style: solid;
+    font-size: 25px;
+}
+
+.image-container {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: 50% 50%;
+    border-radius: 10px 0 0 10px;
 }

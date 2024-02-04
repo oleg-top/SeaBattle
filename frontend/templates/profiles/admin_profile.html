@@ -23,27 +23,9 @@
                     <p>ID: <strong style="color: #feb626">{{ id }}</strong></p>
                 </div>
             </div>
-
-            <a style="margin-top: 10px" href="/prizes">призы ›</a>
-            <ul id="prizes" style="margin-top: 10px">
-                {% for prize in prizes %}
-                    <li>
-                        <div class="prize-box">
-                            <div class="image-container"
-                                 style="background-image: url(http://localhost:8080/data/images/ships/{{ prize.id }})">
-
-                            </div>
-                            <div class="prize-desc">
-                                <strong>{{ prize.name }}</strong>
-                                <br>
-                                <span>
-                                    {{ prize.description }}
-                                </span>
-                            </div>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
+            <div class="buttons">
+                <button class="new">+ Новое поле</button>
+            </div>
         </div>
 
         <div id="right-panel">
