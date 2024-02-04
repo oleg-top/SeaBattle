@@ -116,7 +116,7 @@ def user_profile():
             'fields': fields[:3]
         }
         role = decoded_token['role']
-        # TODO: редирект на поле, подробный список полей
+
         if role == 'ADMIN':
             return render_template('profiles/admin_profile.html', **kwargs)
         return render_template('profiles/user_profile.html', **kwargs)
