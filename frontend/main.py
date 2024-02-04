@@ -1,10 +1,18 @@
-from flask import Flask, render_template, render_template_string, request, redirect, make_response, url_for
 import jwt
 import requests
+from flask import Flask, render_template, request, redirect, make_response, url_for
 
 app = Flask(__name__)
 API_URL = 'http://localhost:8080'
 app.config['SECRET_KEY'] = 'asdfjp982j3r908ajwef908j2faskdfh23iuh23fi2f23fnzxcvh9zxvc'
+
+
+def get_data(token, mode):
+    req = requests.get(f'{API_URL}/data/get_current_user_data', headers={'Authorization': f'Bearer {token}'})
+    res = req.json()
+    if req.status_code != 200:
+        return {'ship': 'error'}
+    return res[mode]
 
 
 @app.route('/')
@@ -81,7 +89,6 @@ def logout():
     return resp
 
 
-# TODO: отображение призов и полей
 @app.route('/user_profile', methods=['POST', 'GET'])
 def user_profile():
     token = request.cookies.get('token', None)
@@ -92,18 +99,70 @@ def user_profile():
             decoded_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
         except jwt.InvalidSignatureError:
             decoded_token = jwt.decode(token, options={"verify_signature": False}, algorithms=['HS256'])
+
+        prizes = [prz['ship'] for prz in get_data(token, 'prizes')]  # список призов
+        fields = [fld['field'] for fld in get_data(token, 'shots')]  # список полей
+        if len(prizes) == 0:
+            prizes = [
+                {
+                    'name': 'призов пока нет'
+                }
+            ]
+
         kwargs = {
             'username': decoded_token['sub'],
             'id': decoded_token['id'],
+            'prizes': prizes[:3],
+            'fields': fields[:3]
         }
+        role = decoded_token['role']
+
+        if role == 'ADMIN':
+            return render_template('profiles/admin_profile.html', **kwargs)
         return render_template('profiles/user_profile.html', **kwargs)
 
 
-def get_prizes(token):
-    req = requests.get(f'{API_URL}/data/get_current_user_data', headers={'Authorization': f'Bearer {token}'})
-    res = req.json()
-    if req.status_code != 200:
-        return render_template('error.html', error='Ошибка при загрузке данных')
+@app.route('/prizes')
+def prizes_page():
+    token = request.cookies.get('token', None)
+    if token is None:
+        return redirect(url_for('login'))
+    else:
+        try:
+            decoded_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        except jwt.InvalidSignatureError:
+            decoded_token = jwt.decode(token, options={"verify_signature": False}, algorithms=['HS256'])
+        prizes = [prz['ship'] for prz in get_data(token, 'prizes')]  # список призов
+        kwargs = {
+            'prizes': prizes,
+
+        }
+        role = decoded_token['role']
+
+        if role == 'ADMIN':
+            return redirect(url_for('user_profile'))
+        return render_template('profiles/prizes.html', **kwargs)
+
+
+@app.route('/fields')
+def fields_page():
+    token = request.cookies.get('token', None)
+    if token is None:
+        return redirect(url_for('login'))
+    else:
+        try:
+            decoded_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        except jwt.InvalidSignatureError:
+            decoded_token = jwt.decode(token, options={"verify_signature": False}, algorithms=['HS256'])
+        fields = [fld['field'] for fld in get_data(token, 'shots')]  # список полей
+        kwargs = {
+            'fields': fields,
+        }
+        role = decoded_token['role']
+
+        if role == 'ADMIN':
+            return redirect(url_for('user_profile'))
+        return render_template('profiles/fields.html', **kwargs)
 
 
 if __name__ == '__main__':

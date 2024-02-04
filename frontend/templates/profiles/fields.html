@@ -1,0 +1,48 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    Поля
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="../../static/css/prizes.css">
+{% endblock %}
+
+{% block content %}
+    <body style="margin: 20px">
+    <h1 style="font-size: 35px">Доступные поля</h1>
+    <div style="margin-top: 15px" class="filter">
+        <h4 style="font-size: 28px; margin-right: 20px; align-self: end">поиск</h4>
+        <input class="input-field" id="searchInput" type="text">
+    </div>
+    <div>
+        <ul id="prizes" style="margin-top: 20px" class="prizes">
+            {% for field in fields %}
+                <li>
+                    <div class="field-box">
+                        <button class="field-button"
+                                onclick="handleFieldButtonClick('ряряр', {{ field.description }})">
+                            <strong>{{ field.name }}</strong>
+                            <h6 style="color: #666666; font-size: 18px">Размер: {{ field.size }} x {{ field.size }}</h6>
+                            <span style="margin-top: 6px">{{ field.description }}</span>
+                        </button>
+                    </div>
+
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function () {
+            var searchValue = this.value.toLowerCase();
+            var listItems = document.querySelectorAll('.field-box');
+
+            listItems.forEach(function (item) {
+                var text = item.textContent.toLowerCase();
+                var isMatch = text.includes(searchValue);
+                item.style.display = isMatch ? 'flex' : 'none';
+            });
+        });
+    </script>
+    </body>
+{% endblock %}

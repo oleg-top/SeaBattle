@@ -1,0 +1,92 @@
+body {
+    font-family: Bahnschrift, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1d1d1d;
+    color: #fafafa;
+}
+
+.field-button {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: #121212;
+    color: #fafafa;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 0px;
+    text-align: left;
+}
+
+.filter {
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+.prize-box {
+    background-color: #121212;
+    border-radius: 10px;
+    display: flex;
+}
+
+.prize-desc {
+    margin-left: 15px;
+    align-self: center;
+}
+
+.prize-desc strong {
+    font-size: 25px;
+}
+
+
+#prizes {
+    list-style: none;
+    padding: 0;
+}
+
+#prizes li {
+    margin-bottom: 20px;
+}
+
+#prizes img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px 0 0 10px;
+}
+
+.input-field {
+    color: grey;
+    background-color: #121212;
+    border-radius: 15px;
+    border: #121212;
+    transition: transform 0.3s ease;
+    padding: 10px;
+    font-size: 20px;
+    align-self: center;
+    width: 40%;
+}
+
+button strong {
+    font-size: 25px;
+    align-self: center;
+}
+
+span {
+    font-size: 18px;
+}
+
+.image-container {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: 50% 50%;
+    border-radius: 10px 0 0 10px;
+}
+
+.field-box {
+
+}
