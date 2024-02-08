@@ -56,7 +56,7 @@ public class ShipService {
         shipRepository.save(ship);
     }
 
-    public void createNewShip(Ship ship, MultipartFile file) {
+    public Ship createNewShip(Ship ship, MultipartFile file) {
         ship.setActive(true);
         ship.setEmpty(false);
         shipRepository.save(ship);
@@ -64,6 +64,7 @@ public class ShipService {
         ship.setImage(filename);
         shipRepository.save(ship);
         fileStorageUtils.save(file, filename);
+        return ship;
     }
 
     public void createNewEmptyShip(Integer x, Integer y, Field field) {

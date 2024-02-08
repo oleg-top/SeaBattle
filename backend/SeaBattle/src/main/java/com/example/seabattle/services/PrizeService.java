@@ -15,8 +15,9 @@ public class PrizeService {
 
     private final PrizeRepository prizeRepository;
 
-    public void createNewPrize(Prize prize) {
+    public boolean createNewPrize(Prize prize) {
         prizeRepository.save(prize);
+        return true;
     }
 
     public void deletePrizeByShip(Ship ship) {

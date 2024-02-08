@@ -14,8 +14,9 @@ public class FieldService {
     private final FieldRepository fieldRepository;
     private final ShipService shipService;
 
-    public void createNewField(Field field) {
+    public Field createNewField(Field field) {
         fieldRepository.save(field);
+        return field;
     }
 
     public Optional<Field> findById(Long id) {
