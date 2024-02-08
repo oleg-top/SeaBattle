@@ -99,7 +99,7 @@ public class AdminController {
             if (ship_on_cord.isPresent())
                 return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "The ship on given coordinates and field is already existing"), HttpStatus.BAD_REQUEST);
             shipService.assignShipToField(ship, field, assignShipRequest.getX(), assignShipRequest.getY());
-            return ResponseEntity.ok("The ship has been assigned successfully");
+            return ResponseEntity.ok(new AddShipResponse("Ship has been assigned successfully", ship.getId()));
 
         } catch (Exception e) {
             log.error(e.getMessage());
