@@ -13,12 +13,18 @@ public class Ship {
 
     private String image;
 
+    private String name;
+
     private String description;
 
     @ManyToOne
     private Field field;
 
-    private Integer pos_x;
+    private Integer x;
 
-    private Integer pos_y;
+    private Integer y;
+
+    private Boolean active;
+
+    private Boolean empty;
 }

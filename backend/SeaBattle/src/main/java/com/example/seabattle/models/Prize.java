@@ -14,6 +14,6 @@ public class Prize {
     @ManyToOne
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Ship ship;
 }
