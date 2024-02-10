@@ -72,7 +72,6 @@ def signup():
             resp = make_response(redirect(url_for('user_profile')))
             resp.set_cookie('token', res['token'], max_age=60 * 60 * 24 * 7 * 2)
             return resp
-
         else:
             return render_template('error.html', error=res['message'])
 
@@ -135,7 +134,6 @@ def prizes_page():
         prizes = [prz['ship'] for prz in get_data(token, 'prizes')]  # список призов
         kwargs = {
             'prizes': prizes,
-
         }
         role = decoded_token['role']
 
