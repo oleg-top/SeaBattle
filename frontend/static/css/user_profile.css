@@ -1,0 +1,143 @@
+body {
+    font-family: Bahnschrift, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1d1d1d;
+    color: #fafafa;
+}
+
+.a-header {
+    text-align: right;
+    margin-left: auto;
+    margin-right: 20px;
+    color: #feb626
+}
+
+.headers {
+    display: flex;
+    margin-left: 20px;
+    margin-top: 20px;
+    font-size: 30px
+}
+
+.user-info {
+    display: flex;
+}
+
+.user-text {
+    margin-left: 25px;
+    align-self: center;
+}
+
+.user-text #username {
+    font-size: 40px;
+}
+
+.user-text p {
+    font-size: 25px;
+}
+
+.prize-box {
+    background-color: #121212;
+    border-radius: 10px;
+    display: flex;
+
+}
+
+.prize-desc {
+    margin-left: 15px;
+    align-self: center;
+}
+
+.prize-desc strong {
+    font-size: 25px;
+}
+
+#right-panel button strong {
+    font-size: 25px;
+    align-self: center;
+}
+
+span {
+    font-size: 18px;
+}
+
+#container {
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#left-panel {
+    flex: 1;
+    padding: 20px;
+}
+
+#avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+#prizes {
+    list-style: none;
+    padding: 0;
+}
+
+#prizes li {
+    margin-bottom: 20px;
+}
+
+#prizes img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px 0px 0px 10px;
+}
+
+#right-panel {
+    flex: 1;
+    padding: 20px;
+}
+
+.field-button {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: #121212;
+    color: #fafafa;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+a {
+    font-size: 28px;
+    color: #fafafa;
+}
+
+a:hover {
+    color: #ff9100;
+}
+
+.new {
+    color: #212121;
+    background-color: #feb626;
+    border-radius: 20px;
+    border-color: #feb626;
+    border-style: solid;
+    font-size: 25px;
+}
+
+.image-container {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: 50% 50%;
+    border-radius: 10px 0 0 10px;
+}

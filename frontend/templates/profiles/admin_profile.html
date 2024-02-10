@@ -1,0 +1,55 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+    Личный кабинет
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="../../static/css/user_profile.css">
+{% endblock %}
+
+{% block content %}
+    <div class="headers">
+        <h1 style="font-size: 35px">Личный кабинет</h1>
+        <a class="a-header" href="/logout">Выход</a>
+    </div>
+
+    <div style="display: flex">
+        <div id="left-panel">
+            <div class="user-info">
+                <img id="avatar" src="../../static/src/98530161.jpg" alt="фото профиля">
+                <div class="user-text">
+                    <strong id="username">{{ username }}</strong>
+                    <p>ID: <strong style="color: #feb626">{{ id }}</strong></p>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="new">+ Новое поле</button>
+            </div>
+        </div>
+
+        <div id="right-panel">
+            <a href="/fields">поля ›</a>
+            <ul id="prizes">
+                {% for field in fields %}
+                    <li>
+                        <button class="field-button"
+                                onclick="handleFieldButtonClick('ряряр', {{ field.description }})">
+                            <strong>{{ field.name }}</strong>
+                            <h6 style="color: #666666; font-size: 18px">Размер: {{ field.size }} x {{ field.size }}</h6>
+                            <span style="margin-top: 6px">{{ field.description }}</span>
+                        </button>
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+
+    <script>
+        function handleFieldButtonClick(fieldName, fieldDescription) {
+            alert("Button clicked for field: " + fieldName + "\nDescription: " + fieldDescription);
+            // переход на поле
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+    SeaBattle
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="../../static/css/signup.css">
+{% endblock %}
+
+{% block content %}
+    <div align="center">
+        <h1 class="header">SeaBattle</h1>
+    </div>
+
+    <div class="ui">
+        <form id="login-form" method="post">
+            <div class="login-container">
+                <h2 style="margin-bottom: 20px">регистрация</h2>
+                <div class="form-group">
+                    <input class="input-field" id="username" name="username" required>
+                    <label for="username">логин</label>
+                </div>
+
+                <div class="form-group">
+                    <input class="input-field" type="password" id="password" name="password" required>
+                    <label for="password">пароль</label>
+                </div>
+                <div class="checkbox-div" style="display: flex">
+                    <input name="isAdmin" class="css-checkbox" type="checkbox" id="isAdmin"
+                           style="display: none;">
+                    <label for="isAdmin">администратор</label>
+                </div>
+                <p style="font-size: 18px; color: orangered">{{ msg }}</p>
+                <button class="action-button" type="submit">
+                    зарегистрироваться
+                </button>
+                <div class="registration">
+                    <a href="/login">уже есть аккаунт? войти</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
