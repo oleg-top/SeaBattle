@@ -1,0 +1,122 @@
+body {
+    background-color: #1d1d1d;
+    color: #fafafa;
+    font-family: "Bahnschrift", sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    margin-top: 30px;
+}
+
+.ui {
+    padding: 20px; /* Внутренний отступ для контента внутри формы */
+    border: 1px solid #000000; /* Толщина и цвет рамки формы */
+    border-radius: 10px; /* Скругление углов рамки формы */
+    background-color: #000000; /* Цвет фона формы */
+    width: 650px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тень для окошка формы */
+    margin-top: 50px;
+}
+
+.field-container {
+    background-color: #000000;
+    flex: 1;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    max-width: 100%;
+}
+
+
+
+
+
+
+
+input {
+    width: 100%;
+    padding: 10px;
+    font-size: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    align-self: center;
+    min-width: 600px;
+}
+
+.input-field {
+    color: grey;
+    background-color: #121212;
+    border-radius: 15px;
+    border: #121212;
+    transition: transform 0.3s ease;
+}
+
+.input-field:focus {
+    transform: scale(102%);
+    background-color: #212121;
+    border: 2px #212121 solid;
+}
+
+.ui {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    color: #ecf0f1;
+    align-items: center;
+    font-size: 50pt;
+    padding: 30px;
+}
+
+.container {
+    display: flex;
+    max-width: 800px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #34495e;
+}
+
+
+
+.form-group {
+    width: 100%;
+    display: flex;
+    padding-right: 20px;
+}
+
+label {
+    font-size: 25px;
+    margin-bottom: 8px;
+    margin-left: 20px;
+    /*display: block;*/
+    align-self: center;
+}
+
+.action-button {
+    background-color: #feb626;
+    color: #1d1d1d;
+    padding: 10px 20px;
+    font-size: 22px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+
+}
+
+.action-button:hover {
+    transform: scale(110%);
+}

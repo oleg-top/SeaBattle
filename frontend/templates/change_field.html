@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Работа с полем</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Библиотеки -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script> <!-- Библиотеки -->
+    <script src="https://unpkg.com/tippy.js@6"></script> <!-- Библиотеки -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/change_field.css">
+    <script>
+        var field_id = '{{ field_id }}';
+        var size = '{{ size }}';
+        var ships_nums = JSON.parse('{{ ships_nums|tojson }}');
+        var ship_information = JSON.parse('{{ ship_information|tojson }}');
+        console.log(ships_nums);
+        console.log(ship_information);
+    </script>
+</head>
+<body>
+<div class="Bui">
+<div align="center">
+    <h1 class="header"> {{ name }} </h1>
+    <h1 class="header"> {{ description }} </h1>
+</div>
+    <div class="ui">
+    <form>
+        <h2 style="margin-bottom: 20px">Создание приза</h2>
+        <div class="field-container">
+            <div class="form-group">
+                <input name='prize_name' id='prize_name' placeholder="Название приза" type="text" pmaxlength="25" required>
+            </div>
+            <div class="form-group">
+                <input name='prize_description' id="prize_description" placeholder="Описание приза" value=""  required>
+            </div>
+            <div class="form-group">
+                <input name='file' type="file" id="file"><br><br>
+            </div>
+            <div class="checkbox-div" style="display: flex">
+                <input name="isAdmin" class="css-checkbox" type="checkbox" id="empty"
+                       style="display: none;">
+                <label for="empty">Опустошить клетку</label>
+            </div>
+        </div>
+    </form>
+    </div>
+    <div class="field" id="field" style="margin-top: 50px">
+        <script src="../static/create_field.js"></script>
+    </div>
+
+</div>
+
+</body>
+</html>

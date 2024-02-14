@@ -1,6 +1,7 @@
 import jwt
 import requests
-from flask import Flask, render_template, request, redirect, make_response, url_for
+from flask import Flask, render_template, request, redirect, make_response, url_for, jsonify
+import json
 
 app = Flask(__name__)
 API_URL = 'http://localhost:8080'
@@ -72,6 +73,7 @@ def signup():
             resp = make_response(redirect(url_for('user_profile')))
             resp.set_cookie('token', res['token'], max_age=60 * 60 * 24 * 7 * 2)
             return resp
+
         else:
             return render_template('error.html', error=res['message'])
 
@@ -134,6 +136,7 @@ def prizes_page():
         prizes = [prz['ship'] for prz in get_data(token, 'prizes')]  # список призов
         kwargs = {
             'prizes': prizes,
+
         }
         role = decoded_token['role']
 
@@ -156,11 +159,106 @@ def fields_page():
         kwargs = {
             'fields': fields,
         }
+        print(kwargs)
         role = decoded_token['role']
 
         if role == 'ADMIN':
             return redirect(url_for('user_profile'))
         return render_template('profiles/fields.html', **kwargs)
+
+
+
+
+@app.route('/create_field', methods=['GET', 'POST'])
+def create_field():
+    if request.method == 'POST':
+        print(request)
+        name = request.form.get('field_name')
+        description = request.form.get('field_description')
+        size = request.form.get('field_size')
+        body = {'name': name, 'description': description, 'size': size}
+        print(body)
+        req = requests.post(f'http://localhost:8080/field/create', json=body)
+        field_id = req.json()['id']
+        print(field_id)
+        return redirect(url_for('change_field', field_id=field_id))
+    print('GO')
+    return render_template('create_field.html')
+
+
+@app.route('/invitation', methods=['GET', 'POST'])
+def invite():
+    if request.method == 'POST':
+        print(request)
+        userId = request.form.get('userId')
+        fieldId = request.form.get('fieldId')
+        amount = request.form.get('amount')
+        body = {'userId': userId, 'fieldId': fieldId, 'amount': int(amount)}
+        print(body)
+        req = requests.post(f'http://localhost:8080/field/invite_user', json=body)
+        field_id = req.json()['id']
+        print(field_id)
+    print('GO')
+    return render_template('invitation.html')
+
+
+@app.route('/change_field/<field_id>', methods=['GET', 'POST'])
+def change_field(field_id):
+    if request.method == 'POST':
+        data = request.data.decode('utf-8')
+        json_data = json.loads(data)
+        print(json_data)
+        req = requests.post(f'http://localhost:8080/field/assign_ship', json=json_data)
+        print(req.json())
+        # print(json_data)
+        # print(json_data['shipId'], json_data['fieldId'], json_data['x'] ,json_data['y'])
+    req = requests.request("GET", f'http://localhost:8080/data/get_field_data_by_id/{field_id}')
+    req = req.json()
+    size = req['field']['size']
+    name = req['field']['name']
+    description = req['field']['description']
+    ships = req['ships']
+    ships_nums = []
+    ship_information = []
+    for ship in ships:
+        ships_nums.append(int(ship['x']) + int(ship['y']) * size)
+        ship_information.append({'id': ship['id'], 'image': ship['image'], 'description': ship['description'], 'name': ship['name'], 'active': ship['active']})
+
+    print(ships_nums)
+    return render_template('change_field.html', field_id=field_id, size=size, name=name, description=description, ships_nums=ships_nums, ship_information=ship_information)
+
+
+@app.route('/play_field/<field_id>', methods=['GET', 'POST'])
+def play_field(field_id):
+    if request.method == 'POST':
+        data = request.data.decode('utf-8')
+        json_data = json.loads(data)
+        print(json_data)
+        if json_data['type'] == 'shot':
+            data = json.dumps({"fieldId": json_data["fieldID"], "x": json_data["x"], "y": json_data["y"]})
+            req = requests.post(f'http://localhost:8080/game/take_a_shot', data=data,  headers={'Authorization': f'Bearer {json_data["token"]}', 'Content-Type': 'application/json'})
+            print(req.json())
+            print(json_data)
+            return jsonify(req.json()), 200
+        else:
+            req = requests.post(f'http://localhost:8080/field/assign_ship', json=json_data)
+            print(req.json())
+            print(json_data)
+            print(json_data['shipId'], json_data['fieldId'], json_data['x'], json_data['y'])
+    req = requests.request("GET", f'http://localhost:8080/data/get_field_data_by_id/{field_id}')
+    req = req.json()
+    print(req)
+    size = req['field']['size']
+    name = req['field']['name']
+    description = req['field']['description']
+    ships = req['ships']
+    ships_nums = []
+    ship_information = []
+    for ship in ships:
+        ships_nums.append(int(ship['x']) + int(ship['y']) * size)
+        ship_information.append({'id': ship['id'], 'image': ship['image'], 'description': ship['description'], 'name': ship['name'], 'active': ship['active']})
+    print(ships_nums)
+    return render_template('play_field.html', field_id=field_id, size=size, name=name, description=description, ships_nums=ships_nums, ship_information=ship_information)
 
 
 if __name__ == '__main__':

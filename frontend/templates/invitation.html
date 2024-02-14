@@ -1,0 +1,32 @@
+
+    <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+            <link rel="stylesheet" href="../../static/css/invite.css">
+    </head>
+    <body>
+        <div class="ui">
+            <form method="post" enctype="application/json">
+                <div class="field-container">
+                    <h2 style="margin-bottom: 20px">Пригласить пользователя на поле</h2>
+                    <div class="form-group">
+                    <input class="input-field" name = 'userId' id='userId' type="text" placeholder="ID пользователя" value="" maxlength="25"><br><br>
+                    </div>
+                    <div class="form-group">
+                    <input class="input-field" name='fieldId' id="fieldId" placeholder="ID поля" value=""  required><br><br>
+                    </div>
+                    <div class="form-group">
+                    <input class="input-field" name='amount' id='amount' type="number" placeholder="Количество выстрелов " value=""><br><br>
+                    </div>
+
+                    <button class="action-button" type="submit"> Пригласить </button>
+               </div>
+            </form>
+        </div>
+    </body>
+</html>
+</body>
+</html>

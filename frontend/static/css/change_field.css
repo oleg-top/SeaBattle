@@ -3,7 +3,39 @@ body {
     color: #fafafa;
     font-family: "Bahnschrift", sans-serif;
     margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.header {
+    margin-top: 30px;
+}
+
+
+.Bui {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем по горизонтали */
+}
+
+.ui {
+    padding: 20px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    background-color: #000000;
+    width: 100%; /* Занимает всю доступную ширину */
+    min-width: 650px; /* Максимальная ширина блока */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+    margin-bottom: 20px;
+    /*margin-left: 300px;*/
+    box-sizing: border-box; /* Учитывает padding и border в расчете ширины */
+}
+
+
+
+
 
 .header {
     margin-top: 30px;
@@ -35,81 +67,11 @@ input {
     border: 2px #212121 solid;
 }
 
-.ui {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-h1 {
-    color: #ecf0f1;
-    align-items: center;
-    font-size: 50pt;
-    padding: 30px;
-}
 
-.container {
-    display: flex;
-    max-width: 800px;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #34495e;
-}
 
-.login-container {
-    background-color: #1d1d1d;
-    flex: 1;
-    padding-top: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30px;
-    max-width: 100%;
-}
 
-.form-group {
-    width: 100%;
-    display: flex;
-    padding-right: 20px;
-}
 
-label {
-    font-size: 25px;
-    margin-bottom: 8px;
-    margin-left: 20px;
-    display: block;
-    align-self: center;
-}
-
-.action-button {
-    background-color: #feb626;
-    color: #1d1d1d;
-    padding: 10px 20px;
-    font-size: 22px;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-
-}
-
-.action-button:hover {
-    transform: scale(110%);
-}
-
-.registration {
-    margin-top: 25px;
-    text-align: center;
-}
-
-.registration a {
-    color: #feb626;
-    text-decoration: underline;
-    font-size: 18px;
-}
 
 
 
@@ -168,4 +130,19 @@ label {
     font-size: 10px;
     height: 29px;
     width: 35px;
+}
+
+
+
+/* Стили для кнопки */
+#popupButton {
+  position: fixed;
+  top: 10px; /* Расположить вверху */
+  right: 10px; /* Расположить справа */
+  padding: 10px 20px;
+  background-color: #007bff; /* Цвет фона кнопки */
+  color: #fff; /* Цвет текста кнопки */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

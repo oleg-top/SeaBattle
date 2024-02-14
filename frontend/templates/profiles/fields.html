@@ -21,7 +21,7 @@
                 <li>
                     <div class="field-box">
                         <button class="field-button"
-                                onclick="handleFieldButtonClick('ряряр', {{ field.description }})">
+                                onclick="window.open('http://localhost:8081/play_field/{{ field.id }}');">
                             <strong>{{ field.name }}</strong>
                             <h6 style="color: #666666; font-size: 18px">Размер: {{ field.size }} x {{ field.size }}</h6>
                             <span style="margin-top: 6px">{{ field.description }}</span>
